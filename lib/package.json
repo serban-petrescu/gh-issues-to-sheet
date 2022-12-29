@@ -1,0 +1,39 @@
+{
+    "name": "gh-issues-to-sheet",
+    "version": "0.0.1",
+    "description": "",
+    "main": "src/index.ts",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "rimraf dist && ncc build --source-map --license licenses.txt",
+        "format": "eslint --fix --ignore-path .eslintignore --ext .js,.ts .",
+        "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
+        "local": "ts-node ./src/local.ts",
+        "prepare": "npm run build"
+    },
+    "keywords": [],
+    "author": "Serban Petrescu <Serban.Petrescu@outlook.com>",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/google-spreadsheet": "3.3.0",
+        "@typescript-eslint/eslint-plugin": "5.47.1",
+        "@typescript-eslint/parser": "5.47.1",
+        "@vercel/ncc": "0.36.0",
+        "dotenv": "16.0.3",
+        "eslint": "8.30.0",
+        "eslint-config-prettier": "8.5.0",
+        "eslint-plugin-prettier": "4.2.1",
+        "eslint-plugin-simple-import-sort": "8.0.0",
+        "prettier": "2.8.1",
+        "rimraf": "3.0.2",
+        "ts-node": "10.9.1",
+        "typescript": "4.9.4"
+    },
+    "dependencies": {
+        "@octokit/rest": "19.0.5",
+        "google-spreadsheet": "3.3.0"
+    }
+}
