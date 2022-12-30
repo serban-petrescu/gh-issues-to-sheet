@@ -15,6 +15,13 @@ jobs:
         needs: ['analyze']
         steps:
             - uses: actions/checkout@v3
+            - name: Prepare folder
+              run: |
+                git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+                git config --global user.email "serban-petrescu@users.noreply.github.com"
+                git fetch
+                git checkout release
+                rm -rf ./*
             - name: Download artifacts
               uses: actions/download-artifact@v3
               with:
@@ -22,14 +29,6 @@ jobs:
             - name: Release
               run: |
                 ls -l
-                git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
-                git config --global user.email "serban-petrescu@users.noreply.github.com"
-                mkdir -p ../dist
-                cp -a ./action/dist/. ../dist/
-                git fetch
-                git checkout release
-                rm -rf ./*
-                cp -a ../dist/. ./
                 git add --all
                 git commit -m "chore(release): Releases build artifacts." --allow-empty
                 git push -f
