@@ -20,7 +20,10 @@
 
         "build": "run-s build:*",
         "build:lib": "cd lib && npm run build",
-        "build:action": "cd action && npm run build"
+        "build:action": "cd action && npm run build",
+
+        "test": "run-s test:*",
+        "test:lib": "cd lib && npm run test"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "5.47.1",
