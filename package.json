@@ -16,7 +16,7 @@
 
         "postinstall": "run-s install:*",
         "install:lib": "cd lib && npm ci",
-        "install:action": "cd action && npm ci",
+        "install:action": "cd action && npm ci --install-links",
 
         "build": "run-s build:*",
         "build:lib": "cd lib && npm run build",
