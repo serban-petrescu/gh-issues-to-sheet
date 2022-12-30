@@ -8,7 +8,7 @@
         "dist"
     ],
     "scripts": {
-        "build": "rimraf dist && ncc build --source-map --license licenses.txt && copyfiles -f action.yml ../README.md ../.gitignore dist",
+        "build": "rimraf dist && ncc build --source-map --license licenses.txt && copyfiles -f ../action.yml ../README.md ../.gitignore dist",
         "prepare": "npm run build"
     },
     "keywords": [],
