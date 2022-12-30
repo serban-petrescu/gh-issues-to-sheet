@@ -12761,7 +12761,7 @@ var GitHubReader = /** @class */ (function (_super) {
                             return [2 /*return*/, [result, false]];
                         }
                         result.push.apply(result, response.data.items.map(function (issue) {
-                            var _a, _b, _c, _d, _e, _f;
+                            var _a, _b, _c, _d, _e, _f, _g;
                             return ({
                                 id: String(issue.number),
                                 type: (issue.pull_request ? 'pr' : 'issue'),
@@ -12770,7 +12770,7 @@ var GitHubReader = /** @class */ (function (_super) {
                                 assignee: (_b = (_a = issue.assignee) === null || _a === void 0 ? void 0 : _a.login) !== null && _b !== void 0 ? _b : null,
                                 milestone: (_d = (_c = issue.milestone) === null || _c === void 0 ? void 0 : _c.title) !== null && _d !== void 0 ? _d : null,
                                 createdBy: (_f = (_e = issue.user) === null || _e === void 0 ? void 0 : _e.login) !== null && _f !== void 0 ? _f : null,
-                                closedAt: issue.closed_at,
+                                closedAt: (_g = issue.closed_at) !== null && _g !== void 0 ? _g : null,
                                 createdAt: issue.created_at,
                                 url: issue.html_url,
                                 repository: _this.urlToRepoName(issue.repository_url),
@@ -12869,15 +12869,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.GSheetWriter = void 0;
+exports.GSheetWriter = exports.HEADER = void 0;
 var google_spreadsheet_1 = __nccwpck_require__(3781);
 var logger_1 = __nccwpck_require__(3806);
-var HEADER = ['repository', 'id', 'type', 'title', 'state', 'url', 'assignee', 'milestone', 'createdBy', 'createdAt', 'closedAt'];
+exports.HEADER = ['repository', 'id', 'type', 'title', 'state', 'url', 'assignee', 'milestone', 'createdBy', 'createdAt', 'closedAt'];
 var GSheetWriter = /** @class */ (function (_super) {
     __extends(GSheetWriter, _super);
-    function GSheetWriter(sheetFactory) {
+    function GSheetWriter(sheetFactory, retryIntervals) {
+        if (retryIntervals === void 0) { retryIntervals = [0, 1000, 3000, 9000, 27000, 81000]; }
         var _this = _super.call(this) || this;
         _this.sheetFactory = sheetFactory;
+        _this.retryIntervals = retryIntervals;
         return _this;
     }
     GSheetWriter.forServiceAccountCredentials = function (creds) {
@@ -12911,17 +12913,15 @@ var GSheetWriter = /** @class */ (function (_super) {
                     case 3:
                         _b.sent();
                         this.logger.debug("Finished syncing the issues in the sheet.");
-                        return [3 /*break*/, 7];
-                    case 4: return [4 /*yield*/, tab.clear()];
-                    case 5:
-                        _b.sent();
+                        return [3 /*break*/, 6];
+                    case 4:
                         this.logger.debug("Cleared the sheet.");
                         return [4 /*yield*/, this.writeIssuesFull(tab, issues)];
-                    case 6:
+                    case 5:
                         _b.sent();
                         this.logger.debug("Wrote the issues to the sheet.");
-                        _b.label = 7;
-                    case 7: return [2 /*return*/];
+                        _b.label = 6;
+                    case 6: return [2 /*return*/];
                 }
             });
         });
@@ -12930,11 +12930,14 @@ var GSheetWriter = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, tab.setHeaderRow(HEADER)];
+                    case 0: return [4 /*yield*/, tab.clear()];
                     case 1:
                         _a.sent();
-                        return [4 /*yield*/, tab.addRows(issues.map(this.convertIssueToRow))];
+                        return [4 /*yield*/, tab.setHeaderRow(exports.HEADER)];
                     case 2:
+                        _a.sent();
+                        return [4 /*yield*/, tab.addRows(issues.map(this.convertIssueToRow))];
+                    case 3:
                         _a.sent();
                         return [2 /*return*/];
                 }
@@ -12946,7 +12949,7 @@ var GSheetWriter = /** @class */ (function (_super) {
             var rows, updated, _loop_1, this_1, _i, rows_1, row, newIssues;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, tab.setHeaderRow(HEADER)];
+                    case 0: return [4 /*yield*/, tab.setHeaderRow(exports.HEADER)];
                     case 1:
                         _a.sent();
                         return [4 /*yield*/, tab.getRows()];
@@ -13058,7 +13061,7 @@ var GSheetWriter = /** @class */ (function (_super) {
                             });
                         };
                         this_2 = this;
-                        _i = 0, _a = [0, 1000, 3000, 9000, 27000, 81000];
+                        _i = 0, _a = this.retryIntervals;
                         _b.label = 1;
                     case 1:
                         if (!(_i < _a.length)) return [3 /*break*/, 4];
@@ -13072,7 +13075,9 @@ var GSheetWriter = /** @class */ (function (_super) {
                     case 3:
                         _i++;
                         return [3 /*break*/, 1];
-                    case 4: throw error;
+                    case 4:
+                        this.logger.error("Got error while executing retry ".concat(String(error), ", giving up"));
+                        throw error;
                 }
             });
         });
@@ -13104,7 +13109,6 @@ var GSheetWriter = /** @class */ (function (_super) {
     };
     GSheetWriter.prototype.parseSheetUrl = function (url) {
         var _a;
-        //https://docs.google.com/spreadsheets/d/17LEtSJhcH-vRJpBTZaJKG4esuMIExuNPUdPGuXU72Mw/edit#gid=0
         var matches = url.match(/^https:\/\/docs.google.com\/spreadsheets\/d\/([^/]+)(?:\/[^#]+#gid=([0-9]+))$/);
         if (matches) {
             var result = [matches[1], (_a = matches[2]) !== null && _a !== void 0 ? _a : '0'];
@@ -13112,7 +13116,7 @@ var GSheetWriter = /** @class */ (function (_super) {
             return result;
         }
         else {
-            this.logger.error("Got an unparseable sheet URL: ".concat(url, "."));
+            this.logger.error("Got an unparsable sheet URL: ".concat(url, "."));
             throw new Error('Invalid google sheet URL');
         }
     };
