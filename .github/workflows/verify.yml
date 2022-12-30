@@ -21,11 +21,11 @@ jobs:
                   node-version: 16
             - name: Install dependencies
               run: npm ci
-            - name: lint
+            - name: Lint
               run: npm run lint
-            - name: test
+            - name: Test
               run: npm run test
-            - name: results
+            - name: Public results
               uses: EnricoMi/publish-unit-test-result-action@v2
               if: always()
               with:
