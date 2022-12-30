@@ -56,7 +56,7 @@ export class GitHubReader extends BaseLoggedComponent implements IssueReader {
                     assignee: issue.assignee?.login ?? null,
                     milestone: issue.milestone?.title ?? null,
                     createdBy: issue.user?.login ?? null,
-                    closedAt: issue.closed_at,
+                    closedAt: issue.closed_at ?? null,
                     createdAt: issue.created_at,
                     url: issue.html_url,
                     repository: this.urlToRepoName(issue.repository_url),

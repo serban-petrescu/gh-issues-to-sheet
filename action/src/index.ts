@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
-import type { IssueType } from 'gh-issues-to-sheet';
-import { toGoogleSheets } from 'gh-issues-to-sheet';
+import type { IssueType } from 'gh-issues-to-sheet-lib';
+import { toGoogleSheets } from 'gh-issues-to-sheet-lib';
 
 async function run(): Promise<void> {
     try {

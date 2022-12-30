@@ -1,0 +1,36 @@
+{
+    "name": "gh-issues-to-sheet",
+    "version": "0.0.1",
+    "description": "",
+    "keywords": [],
+    "author": "Serban Petrescu <Serban.Petrescu@outlook.com>",
+    "license": "MIT",
+    "scripts": {
+        "lint": "run-p lint:*",
+        "lint:action": "cd action && eslint --ext .js,.ts .",
+        "lint:lib": "cd lib && eslint --ext .js,.ts .",
+
+        "format": "run-p format:*",
+        "format:action": "cd action && eslint --fix --ext .js,.ts .",
+        "format:lib": "cd lib && eslint --fix --ext .js,.ts .",
+
+        "postinstall": "run-s install:*",
+        "install:lib": "cd lib && npm ci",
+        "install:action": "cd action && npm ci",
+
+        "build": "run-s build:*",
+        "build:lib": "cd lib && npm run build",
+        "build:action": "cd action && npm run build"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "5.47.1",
+        "@typescript-eslint/parser": "5.47.1",
+        "eslint": "8.30.0",
+        "eslint-config-prettier": "8.5.0",
+        "eslint-plugin-editorconfig": "^4.0.2",
+        "eslint-plugin-prettier": "4.2.1",
+        "eslint-plugin-simple-import-sort": "8.0.0",
+        "npm-run-all": "^4.1.5",
+        "prettier": "2.8.1"
+    }
+}

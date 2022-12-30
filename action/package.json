@@ -9,27 +9,18 @@
     ],
     "scripts": {
         "build": "rimraf dist && ncc build --source-map --license licenses.txt",
-        "format": "eslint --fix --ignore-path .eslintignore --ext .js,.ts .",
-        "lint": "eslint --ignore-path .eslintignore --ext .js,.ts ."
+        "prepare": "npm run build"
     },
     "keywords": [],
     "author": "Serban Petrescu <Serban.Petrescu@outlook.com>",
     "license": "MIT",
     "devDependencies": {
-        "@types/google-spreadsheet": "3.3.0",
-        "@typescript-eslint/eslint-plugin": "5.47.1",
-        "@typescript-eslint/parser": "5.47.1",
         "@vercel/ncc": "0.36.0",
-        "eslint": "8.30.0",
-        "eslint-config-prettier": "8.5.0",
-        "eslint-plugin-prettier": "4.2.1",
-        "eslint-plugin-simple-import-sort": "8.0.0",
-        "prettier": "2.8.1",
         "rimraf": "3.0.2",
         "typescript": "4.9.4"
     },
     "dependencies": {
         "@actions/core": "1.10.0",
-        "gh-issues-to-sheet": "../lib"
+        "gh-issues-to-sheet-lib": "file:../lib"
     }
 }

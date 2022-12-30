@@ -1,0 +1,28 @@
+{
+    "roots": ["<rootDir>/src"],
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "collectCoverageFrom": ["<rootDir>/src/**/*.ts", "!<rootDir>/**/local.ts"],
+    "coverageDirectory": "out",
+    "coverageThreshold": {
+        "global": {
+            "branches": 80,
+            "functions": 80,
+            "lines": 80,
+            "statements": 80
+        }
+    },
+    "clearMocks": true,
+    "restoreMocks": true,
+    "preset": "ts-jest",
+    "reporters": [
+        "default",
+        [
+            "jest-junit",
+            {
+                "outputDirectory": "out",
+                "outputName": "junit.xml"
+            }
+        ]
+    ]
+}

@@ -4,7 +4,7 @@
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "plugins": ["@typescript-eslint", "prettier", "simple-import-sort"],
+    "plugins": ["@typescript-eslint", "prettier", "simple-import-sort", "editorconfig"],
     "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
     "rules": {
         "simple-import-sort/imports": "error",
@@ -16,5 +16,9 @@
     "env": {
         "browser": true,
         "es2021": true
-    }
+    },
+    "ignorePatterns": [
+        "**/node_modules",
+        "**/dist"
+    ]
 }

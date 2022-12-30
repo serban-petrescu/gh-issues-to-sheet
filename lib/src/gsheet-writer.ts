@@ -4,10 +4,12 @@ import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { BaseLoggedComponent } from './logger';
 import type { Issue, IssueWriter, SheetProps } from './model';
 
-const HEADER = ['repository', 'id', 'type', 'title', 'state', 'url', 'assignee', 'milestone', 'createdBy', 'createdAt', 'closedAt'];
+export const HEADER = ['repository', 'id', 'type', 'title', 'state', 'url', 'assignee', 'milestone', 'createdBy', 'createdAt', 'closedAt'];
+
+export type SheetFactory = (id: string) => Promise<GoogleSpreadsheet>;
 
 export class GSheetWriter extends BaseLoggedComponent implements IssueWriter {
-    constructor(private readonly sheetFactory: (id: string) => Promise<GoogleSpreadsheet>) {
+    constructor(private readonly sheetFactory: SheetFactory, private readonly retryIntervals = [0, 1000, 3000, 9000, 27000, 81000]) {
         super();
     }
 
@@ -29,7 +31,6 @@ export class GSheetWriter extends BaseLoggedComponent implements IssueWriter {
             await this.writeIssuesDelta(tab, issues);
             this.logger.debug(`Finished syncing the issues in the sheet.`);
         } else {
-            await tab.clear();
             this.logger.debug(`Cleared the sheet.`);
             await this.writeIssuesFull(tab, issues);
             this.logger.debug(`Wrote the issues to the sheet.`);
@@ -37,6 +38,7 @@ export class GSheetWriter extends BaseLoggedComponent implements IssueWriter {
     }
 
     private async writeIssuesFull(tab: GoogleSpreadsheetWorksheet, issues: Issue[]): Promise<void> {
+        await tab.clear();
         await tab.setHeaderRow(HEADER);
         await tab.addRows(issues.map(this.convertIssueToRow));
     }
@@ -82,7 +84,7 @@ export class GSheetWriter extends BaseLoggedComponent implements IssueWriter {
 
     private async retry(cb: () => Promise<void>): Promise<void> {
         let error: unknown;
-        for (const sleep of [0, 1000, 3000, 9000, 27000, 81000]) {
+        for (const sleep of this.retryIntervals) {
             await new Promise(resolve => setTimeout(resolve, sleep));
             try {
                 await cb();
@@ -92,6 +94,7 @@ export class GSheetWriter extends BaseLoggedComponent implements IssueWriter {
                 this.logger.info(`Got error while executing retry ${String(e)}`);
             }
         }
+        this.logger.error(`Got error while executing retry ${String(error)}, giving up`);
         throw error;
     }
 
@@ -121,14 +124,13 @@ export class GSheetWriter extends BaseLoggedComponent implements IssueWriter {
     }
 
     private parseSheetUrl(url: string): [string, string] {
-        //https://docs.google.com/spreadsheets/d/17LEtSJhcH-vRJpBTZaJKG4esuMIExuNPUdPGuXU72Mw/edit#gid=0
         const matches = url.match(/^https:\/\/docs.google.com\/spreadsheets\/d\/([^/]+)(?:\/[^#]+#gid=([0-9]+))$/);
         if (matches) {
             const result: [string, string] = [matches[1], matches[2] ?? '0'];
             this.logger.debug(`Parsed sheet URL: sheetId = ${result[0]}, tabId = ${result[1]}.`);
             return result;
         } else {
-            this.logger.error(`Got an unparseable sheet URL: ${url}.`);
+            this.logger.error(`Got an unparsable sheet URL: ${url}.`);
             throw new Error('Invalid google sheet URL');
         }
     }

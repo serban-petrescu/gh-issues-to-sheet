@@ -11,11 +11,11 @@ const exporter = toGoogleSheets({
 
 exporter.exportIssues(
     {
-        repo: 'trilogy-group/aurea-insidesales-telephony-5k',
+        repo: process.env.GITHUB_REPO ?? '',
         types: ['issue'],
     },
     {
-        sheetUrl: 'https://docs.google.com/spreadsheets/d/1kkhxNIh7Q5ZLvlDRarB5RfU_2p57IE0FRnJhQxDiw1w/edit#gid=843890819',
+        sheetUrl: process.env.GSHEET_URL ?? '',
         deltaUpdate: true,
     }
 );
