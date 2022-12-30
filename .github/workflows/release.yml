@@ -1,4 +1,4 @@
-name: Verify
+name: Release
 
 on:
     push:
@@ -18,7 +18,7 @@ jobs:
               run: npm ci
             - name: Release
               run: |
-                md ../dist
+                mkdir -p ../dist
                 cp -a ./action/dist/. ../dist/
                 git fetch
                 git checkout release
