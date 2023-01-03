@@ -12887,9 +12887,14 @@ var GSheetWriter = /** @class */ (function (_super) {
         return new GSheetWriter(function (sheetId) { return __awaiter(_this, void 0, void 0, function () {
             var doc;
             return __generator(this, function (_a) {
-                doc = new google_spreadsheet_1.GoogleSpreadsheet(sheetId);
-                doc.useServiceAccountAuth(creds);
-                return [2 /*return*/, doc];
+                switch (_a.label) {
+                    case 0:
+                        doc = new google_spreadsheet_1.GoogleSpreadsheet(sheetId);
+                        return [4 /*yield*/, doc.useServiceAccountAuth(creds)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/, doc];
+                }
             });
         }); });
     };
@@ -13018,7 +13023,7 @@ var GSheetWriter = /** @class */ (function (_super) {
                             this.updateField(row, issue, 'closedAt'),
                         ];
                         if (!updates.some(function (v) { return v; })) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.retry(function () { return row.save(); })];
+                        return [4 /*yield*/, this.retrySave(row)];
                     case 1:
                         _a.sent();
                         this.logger.debug("Updated ".concat(row.id, " with the latest data."));
@@ -13031,7 +13036,7 @@ var GSheetWriter = /** @class */ (function (_super) {
             });
         });
     };
-    GSheetWriter.prototype.retry = function (cb) {
+    GSheetWriter.prototype.retrySave = function (row) {
         return __awaiter(this, void 0, void 0, function () {
             var error, _loop_2, this_2, _i, _a, sleep, state_1;
             return __generator(this, function (_b) {
@@ -13047,7 +13052,7 @@ var GSheetWriter = /** @class */ (function (_super) {
                                         _c.label = 2;
                                     case 2:
                                         _c.trys.push([2, 4, , 5]);
-                                        return [4 /*yield*/, cb()];
+                                        return [4 /*yield*/, row.save()];
                                     case 3:
                                         _c.sent();
                                         return [2 /*return*/, { value: void 0 }];
@@ -71609,6 +71614,7 @@ function run() {
         });
     });
 }
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 run();
 
 
