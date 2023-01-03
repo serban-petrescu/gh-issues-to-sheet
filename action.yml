@@ -2,23 +2,23 @@ name: Sync GitHub issues to a sheet
 description: Syncs GitHub issues to a given sheet.
 author: serban-petrescu
 inputs:
-    sheetUrl:
+    sheet-url:
         required: true
         description: The URL of the target sheet, including the target tab.
-    githubToken:
+    github-token:
         required: true
         description: The token to use to retrieve the issues.
-    sheetCreds:
+    sheet-creds:
         required: false
         description: The credentials to access the sheet.
-    issueTypes:
+    issue-types:
         required: false
         default: issue
         description: The types of issues to pull (issue, pr or both).
     repository:
         required: false
         description: The repository to pull the issues from. By default, the current repository is used.
-    deltaUpdate:
+    delta-update:
         required: false
         description: If set to true, it will do an in-place update of the issues; otherwise it will clean the tab and put the results.
         default: 'false'
