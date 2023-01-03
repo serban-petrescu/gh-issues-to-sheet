@@ -8,6 +8,11 @@ on:
             publish:
                 type: boolean
                 default: false
+        secrets:
+            IT_GITHUB_TOKEN:
+                required: true
+            IT_GSHEET_AUTH:
+                required: true
 
 concurrency:
     group: ${{ github.ref }}
