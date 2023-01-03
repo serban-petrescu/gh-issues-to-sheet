@@ -6,24 +6,28 @@
     "author": "Serban Petrescu <Serban.Petrescu@outlook.com>",
     "license": "MIT",
     "scripts": {
-        "lint": "run-p lint:*",
+        "lint": "run-p -l lint:*",
         "lint:action": "cd action && eslint --ext .js,.ts .",
         "lint:lib": "cd lib && eslint --ext .js,.ts .",
+        "lint:test": "cd test && eslint --ext .js,.ts .",
 
-        "format": "run-p format:*",
+        "format": "run-p -l format:*",
         "format:action": "cd action && eslint --fix --ext .js,.ts .",
         "format:lib": "cd lib && eslint --fix --ext .js,.ts .",
+        "format:test": "cd test && eslint --fix --ext .js,.ts .",
 
-        "postinstall": "run-s install:*",
+        "postinstall": "run-s -l install:*",
         "install:lib": "cd lib && npm ci",
         "install:action": "cd action && npm ci --install-links",
+        "install:test": "cd test && npm ci --install-links",
 
-        "build": "run-s build:*",
+        "build": "run-s -l build:*",
         "build:lib": "cd lib && npm run build",
         "build:action": "cd action && npm run build",
 
-        "test": "run-s test:*",
-        "test:lib": "cd lib && npm run test"
+        "test": "run-p -l test:*",
+        "test:lib": "cd lib && npm run test",
+        "test:its": "cd test && npm run test"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "5.47.1",

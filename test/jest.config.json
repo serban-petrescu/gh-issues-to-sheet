@@ -1,0 +1,19 @@
+{
+    "roots": ["<rootDir>/src"],
+    "testEnvironment": "node",
+    "collectCoverage": false,
+    "testTimeout": 30000,
+    "clearMocks": true,
+    "restoreMocks": true,
+    "preset": "ts-jest",
+    "reporters": [
+        "default",
+        [
+            "jest-junit",
+            {
+                "outputDirectory": "out",
+                "outputName": "junit.xml"
+            }
+        ]
+    ]
+}

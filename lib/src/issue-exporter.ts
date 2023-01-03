@@ -6,7 +6,7 @@ export class IssueExporter extends BaseLoggedComponent {
         super();
     }
 
-    public async exportIssues(criteria: IssueSearchCriteria, props: SheetProps) {
+    public async exportIssues(criteria: IssueSearchCriteria, props: SheetProps): Promise<void> {
         const issues = await this.reader.findByCriteria(criteria);
         this.logger.info(`Read ${issues.length} issues from GitHub.`);
         await this.writer.writeIssues(issues, props);

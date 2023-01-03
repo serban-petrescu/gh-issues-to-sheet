@@ -9,10 +9,11 @@ const exporter = toGoogleSheets({
     googleCreds: JSON.parse(process.env.GSHEET_AUTH ?? '{}'),
 });
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 exporter.exportIssues(
     {
         repo: process.env.GITHUB_REPO ?? '',
-        types: ['issue'],
+        types: ['issue', 'pr'],
     },
     {
         sheetUrl: process.env.GSHEET_URL ?? '',

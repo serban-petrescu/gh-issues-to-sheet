@@ -16,7 +16,7 @@ export class GSheetWriter extends BaseLoggedComponent implements IssueWriter {
     public static forServiceAccountCredentials(creds: ServiceAccountCredentials): IssueWriter {
         return new GSheetWriter(async sheetId => {
             const doc = new GoogleSpreadsheet(sheetId);
-            doc.useServiceAccountAuth(creds);
+            await doc.useServiceAccountAuth(creds);
             return doc;
         });
     }
@@ -75,19 +75,19 @@ export class GSheetWriter extends BaseLoggedComponent implements IssueWriter {
             this.updateField(row, issue, 'closedAt'),
         ];
         if (updates.some(v => v)) {
-            await this.retry(() => row.save());
+            await this.retrySave(row);
             this.logger.debug(`Updated ${row.id} with the latest data.`);
         } else {
             this.logger.debug(`Issue ${row.id} was already up to date.`);
         }
     }
 
-    private async retry(cb: () => Promise<void>): Promise<void> {
+    private async retrySave(row: GoogleSpreadsheetRow): Promise<void> {
         let error: unknown;
         for (const sleep of this.retryIntervals) {
             await new Promise(resolve => setTimeout(resolve, sleep));
             try {
-                await cb();
+                await row.save();
                 return;
             } catch (e) {
                 error = e;

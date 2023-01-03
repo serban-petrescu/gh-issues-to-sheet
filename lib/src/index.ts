@@ -16,4 +16,4 @@ export function toGoogleSheets(props: ExporterToGSheetsProps): IssueExporter {
     return new IssueExporter(reader, writer);
 }
 
-export { Logger, IssueType };
+export type { Logger, IssueType, IssueExporter };

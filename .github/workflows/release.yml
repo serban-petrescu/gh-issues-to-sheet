@@ -6,9 +6,12 @@ on:
 
 jobs:
     analyze:
-      uses: ./.github/workflows/verify.yml
-      with:
-        publish: true
+        uses: ./.github/workflows/verify.yml
+        with:
+            publish: true
+        secrets:
+            IT_GITHUB_TOKEN: ${{secrets.IT_GITHUB_TOKEN}}
+            IT_GSHEET_AUTH: ${{secrets.IT_GSHEET_AUTH}}
     release:
         name: Release
         runs-on: ubuntu-latest
@@ -17,19 +20,18 @@ jobs:
             - uses: actions/checkout@v3
             - name: Prepare folder
               run: |
-                git config --global user.name "Serban Petrescu"
-                git config --global user.email "serban-petrescu@users.noreply.github.com"
-                git fetch
-                git checkout release
-                rm -rf ./*
+                  git config --global user.name "Serban Petrescu"
+                  git config --global user.email "serban-petrescu@users.noreply.github.com"
+                  git fetch
+                  git checkout release
+                  rm -rf ./*
             - name: Download artifacts
               uses: actions/download-artifact@v3
               with:
-                name: dist
+                  name: dist
             - name: Release
               run: |
-                ls -l
-                git add --all
-                git commit -m "chore(release): Releases build artifacts." --allow-empty
-                git push -f
-
+                  ls -l
+                  git add --all
+                  git commit -m "chore(release): Releases build artifacts." --allow-empty
+                  git push -f
