@@ -2,26 +2,48 @@ name: Sync GitHub issues to a sheet
 description: Syncs GitHub issues to a given sheet.
 author: serban-petrescu
 inputs:
-    sheet-url:
-        required: true
-        description: The URL of the target sheet, including the target tab.
-    github-token:
-        required: true
-        description: The token to use to retrieve the issues.
-    sheet-creds:
+    repository:
         required: false
-        description: The credentials to access the sheet.
+        default: ${{ github.repository }}
+        description: >
+          Repository name with owner. For example, actions/checkout.
+    token:
+        required: true
+        default: ${{ github.token }}
+        description: > 
+          Personal access token (PAT) used to read the issues/pull requests of the given
+          repository. Note that at this time, using fine-grained tokens (GitHub beta)
+          does not work with simultaneously reading issues AND prs in the same run.
     issue-types:
         required: false
         default: issue
-        description: The types of issues to pull (issue, pr or both).
-    repository:
-        required: false
-        description: The repository to pull the issues from. By default, the current repository is used.
+        description: >   
+          The types of issues to read. Possible values:
+           - issue - only reads regular issues, no pull requests.
+           - pr - only reads pull requests, no issues.
+           - issue,pr - reads both regular issues and pull requests.
     delta-update:
         required: false
-        description: If set to true, it will do an in-place update of the issues; otherwise it will clean the tab and put the results.
         default: 'false'
+        description: >
+          If set to true, it will perform a delta update by inspecting the data already
+          present in the target sheet:
+           - If an issue already exists as a row of the sheet, it will update the row
+             with the latest data.
+           - If an issues is missing in the sheet, it will append a new row with the
+             latest data.
+           - If a row does not correspond to any current issue, it will skip it.
+          Otherwise, the action will clear the target tab and then dump the issues in
+          the tab.
+    sheet-url:
+        required: true
+        description: >
+          The full URL of the target sheet, including the tab ID ("gid" hash param).
+    sheet-creds:
+        required: false
+        description: >
+          A set of Google service account credentials that have at least Editor access
+          to the sheet above. See the official Google documentation: https://developers.google.com/workspace/guides/create-credentials#service-account.
 runs:
     using: 'node16'
     main: 'index.js'
