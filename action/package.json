@@ -8,7 +8,7 @@
         "dist"
     ],
     "scripts": {
-        "build": "rimraf dist && ncc build --source-map --license licenses.txt && copyfiles -f ../action.yml ../README.md ../.gitignore dist",
+        "build": "rimraf dist && ncc build --source-map --license licenses.txt && copyfiles -f ../action.yml ../README.md ../.gitignore ../LICENSE dist",
         "prepare": "npm run build"
     },
     "keywords": [],
@@ -23,7 +23,6 @@
     },
     "dependencies": {
         "@actions/core": "1.10.0",
-        "@actions/github": "^5.1.1",
         "gh-issues-to-sheet-lib": "file:../lib/"
     }
 }

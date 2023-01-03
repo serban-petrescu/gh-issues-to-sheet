@@ -1,19 +1,17 @@
 import * as core from '@actions/core';
-import * as github from '@actions/github';
 import type { IssueType } from 'gh-issues-to-sheet-lib';
 import { toGoogleSheets } from 'gh-issues-to-sheet-lib';
 
 async function run(): Promise<void> {
     try {
         const exporter = toGoogleSheets({
-            githubToken: core.getInput('github-token', { required: true }),
+            githubToken: core.getInput('token', { required: true }),
             googleCreds: JSON.parse(core.getInput('sheet-creds', { required: true })),
         });
         exporter.setLogger(core);
-        const { owner, repo } = github.context.repo;
         await exporter.exportIssues(
             {
-                repo: core.getInput('repository') || `${owner}/${repo}`,
+                repo: core.getInput('repository', { required: true }),
                 types: (core.getInput('issue-types') || 'issue').split(',').map(s => s.trim().toLowerCase()) as IssueType[],
             },
             {
