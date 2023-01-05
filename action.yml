@@ -8,7 +8,7 @@ inputs:
         description: >
           Repository name with owner. For example, actions/checkout.
     token:
-        required: true
+        required: false
         default: ${{ github.token }}
         description: > 
           Personal access token (PAT) used to read the issues/pull requests of the given
@@ -40,7 +40,7 @@ inputs:
         description: >
           The full URL of the target sheet, including the tab ID ("gid" hash param).
     sheet-creds:
-        required: false
+        required: true
         description: >
           A set of Google service account credentials that have at least Editor access
           to the sheet above. See the official Google documentation: https://developers.google.com/workspace/guides/create-credentials#service-account.
