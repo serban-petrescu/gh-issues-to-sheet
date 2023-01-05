@@ -1,6 +1,9 @@
 name: Sync GitHub issues to a sheet
 description: Syncs GitHub issues to a given sheet.
 author: serban-petrescu
+branding:
+  color: green
+  icon: upload-cloud
 inputs:
     repository:
         required: false
