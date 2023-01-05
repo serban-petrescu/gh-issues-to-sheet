@@ -42,7 +42,8 @@ If this action gains any traction, I'll add support for pushing data into Excel 
       # The full URL of the target sheet, including the tab ID ("gid" hash param).
       sheet-url: 'https://docs.google.com/spreadsheets/d/1kkhx.../edit#gid=0'
       # A set of Google service account credentials that have at least Editor access
-      # to the sheet above. See the official Google documentation: https://developers.google.com/workspace/guides/create-credentials#service-account.
+      # to the sheet above. See the official Google documentation: 
+      # https://developers.google.com/workspace/guides/create-credentials#service-account
       sheet-creds: '{"type": "service_account",...}'
 ```
 
