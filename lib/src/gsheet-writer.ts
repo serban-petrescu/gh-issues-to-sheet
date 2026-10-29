@@ -4,7 +4,7 @@ import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { BaseLoggedComponent } from './logger';
 import type { Issue, IssueWriter, SheetProps } from './model';
 
-export const HEADER = ['repository', 'id', 'type', 'title', 'state', 'url', 'assignee', 'milestone', 'createdBy', 'createdAt', 'closedAt'];
+export const HEADER = ['repository', 'id', 'type', 'title', 'state', 'url', 'assignee', 'milestone', 'createdBy', 'createdAt', 'closedAt', 'labels',];
 
 export type SheetFactory = (id: string) => Promise<GoogleSpreadsheet>;
 
@@ -73,6 +73,7 @@ export class GSheetWriter extends BaseLoggedComponent implements IssueWriter {
             this.updateField(row, issue, 'createdBy'),
             this.updateField(row, issue, 'createdAt'),
             this.updateField(row, issue, 'closedAt'),
+            this.updateField(row, issue, 'labels'),
         ];
         if (updates.some(v => v)) {
             await this.retrySave(row);
@@ -99,12 +100,17 @@ export class GSheetWriter extends BaseLoggedComponent implements IssueWriter {
     }
 
     private updateField(row: GoogleSpreadsheetRow, issue: Issue, field: keyof Issue): boolean {
-        const value = issue[field] ?? '';
+        const value = this.formatField(issue, field);
         if (row[field] !== value && (value || row[field])) {
             row[field] = value;
             return true;
         }
         return false;
+    }
+
+    private formatField(issue: Issue, field: keyof Issue): string {
+        const value = issue[field];
+        return Array.isArray(value) ? value.join(', ') : value ?? '';
     }
 
     private convertIssueToRow(issue: Issue): string[] {
@@ -120,6 +126,7 @@ export class GSheetWriter extends BaseLoggedComponent implements IssueWriter {
             issue.createdBy ?? '',
             issue.createdAt,
             issue.closedAt ?? '',
+            issue.labels.join(', '),
         ];
     }
 

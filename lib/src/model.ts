@@ -22,6 +22,7 @@ export type Issue = {
     createdBy: string | null;
     createdAt: string;
     closedAt: string | null;
+    labels: list | null;
 };
 
 export type IssueSearchCriteria = {
